@@ -57,6 +57,7 @@ namespace MasterMind.Components
         public Menu Menu { get; private set; }
         public CheckBox DrawGlobal { get; private set; }
         public CheckBox DrawRecallCircle { get; private set; }
+        public CheckBox PrintRecallStatus {get; private set; }
         public CheckBox DrawMovementCircle { get; private set; }
         public CheckBox DrawInvisibleTime { get; private set; }
         public Slider DelayInvisibleTime { get; private set; }
@@ -106,6 +107,7 @@ namespace MasterMind.Components
             Menu.AddGroupLabel("Options");
             DrawGlobal = Menu.Add("global", new CheckBox("Drawing enabled"));
             DrawRecallCircle = Menu.Add("recall", new CheckBox("Draw recall circle"));
+            PrintRecallStatus = Menu.Add("print", new CheckBox("Print recall status"));
             DrawMovementCircle = Menu.Add("movement", new CheckBox("Draw movement circle"));
             DrawInvisibleTime = Menu.Add("time", new CheckBox("Draw time since being invisile"));
             Menu.AddSeparator();
@@ -260,14 +262,17 @@ namespace MasterMind.Components
             // Only check for enemy Heroes and recall teleports
             if (sender.Type == GameObjectType.AIHeroClient && sender.IsEnemy && args.Type == TeleportType.Recall)
             {
+            	var print = PrintRecallStatus.CurrentValue;
                 switch (args.Status)
                 {
                     case TeleportStatus.Start:
                         RecallingHeroes[sender.NetworkId] = new Tuple<int, int>(Core.GameTickCount, args.Duration);
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has started a recall.");
                         break;
 
                     case TeleportStatus.Abort:
                         RecallingHeroes.Remove(sender.NetworkId);
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has aborted a recall.");
                         break;
 
                     case TeleportStatus.Finish:
@@ -275,6 +280,7 @@ namespace MasterMind.Components
                         LastSeenPosition[sender.NetworkId] = EnemySpawnPoint;
                         LastSeenRange[sender.NetworkId] = 0;
                         RecallingHeroes.Remove(sender.NetworkId);
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has finished a recall.");
                         break;
                 }
             }
