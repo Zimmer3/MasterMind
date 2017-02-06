@@ -267,12 +267,12 @@ namespace MasterMind.Components
                 {
                     case TeleportStatus.Start:
                         RecallingHeroes[sender.NetworkId] = new Tuple<int, int>(Core.GameTickCount, args.Duration);
-                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has started a recall.");
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.ChampionName + "</font> has started a recall.");
                         break;
 
                     case TeleportStatus.Abort:
                         RecallingHeroes.Remove(sender.NetworkId);
-                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has aborted a recall.");
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.ChampionName + "</font> has aborted a recall.");
                         break;
 
                     case TeleportStatus.Finish:
@@ -280,7 +280,7 @@ namespace MasterMind.Components
                         LastSeenPosition[sender.NetworkId] = EnemySpawnPoint;
                         LastSeenRange[sender.NetworkId] = 0;
                         RecallingHeroes.Remove(sender.NetworkId);
-                        if (print) Chat.Print("<font color='#FF0000'>" + sender.BaseSkinName + "</font> has finished a recall.");
+                        if (print) Chat.Print("<font color='#FF0000'>" + sender.ChampionName + "</font> has finished a recall.");
                         break;
                 }
             }
